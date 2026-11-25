@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Maschineninfo | Kallfass</title>
+
 <style>
   :root {
     --rot: #db0525;
@@ -45,41 +46,76 @@
 <body>
 <header>
   <div class="innen">
-    <a href="https://www.kallfass.de/"><img src="https://www.kallfass.de/fileadmin/user_upload/images/logo.svg" alt="Kallfass"></a>
+    <a id="startseite" href="https://www.kallfass.de/"><img src="https://www.kallfass.de/fileadmin/user_upload/images/logo.svg" alt="Kallfass"></a>
     <span class="bereich">Service</span>
   </div>
 </header>
 
 <main>
-  <h1>Maschineninfo</h1>
+  <h1 data-text="titel">Maschineninfo</h1>
 
   <div class="karte">
     <div class="zeile">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 11.6 12.4 2.6A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7c0 .6.2 1.1.6 1.4l9 9a2 2 0 0 0 2.8 0l7-7a2 2 0 0 0 0-2.8ZM6.5 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"/></svg>
-      <div><span>Maschinennummer</span><strong id="nr">–</strong></div>
+      <div><span data-text="nr">Maschinennummer</span><strong id="nr">–</strong></div>
     </div>
     <div class="zeile">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.8 1.7 1l.4 2.6h4l.4-2.6c.6-.2 1.2-.6 1.7-1l2.5 1 2-3.5L19.4 13ZM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z" transform="translate(-1 0)"/></svg>
-      <div><span>Maschinentyp</span><strong id="typ">–</strong></div>
+      <div><span data-text="typ">Maschinentyp</span><strong id="typ">–</strong></div>
     </div>
   </div>
-  <p class="hinweis" id="fehlt" hidden>In diesem Link sind keine Maschinendaten enthalten.</p>
+  <p class="hinweis" id="fehlt" data-text="fehlt" hidden>In diesem Link sind keine Maschinendaten enthalten.</p>
 
   <div class="knoepfe">
-    <a class="knopf haupt" id="anrufen">Service anrufen</a>
-    <a class="knopf zweit" id="kontakt">Kontaktformular</a>
+    <a class="knopf haupt" id="anrufen" data-text="anrufen">Service anrufen</a>
+    <a class="knopf zweit" id="kontakt" data-text="kontakt">Kontaktformular</a>
   </div>
-  <p class="hinweis">Service-Hotline: <strong id="hotline"></strong></p>
+  <p class="hinweis"><span data-text="hotline">Service-Hotline:</span> <strong id="hotline"></strong></p>
 </main>
 
 <footer>
   <div>KALLFASS Verpackungsmaschinen GmbH · Siemensstraße 8 · 72622 Nürtingen</div>
-  <div><a href="https://www.kallfass.de/impressum">Impressum</a> · <a href="https://www.kallfass.de/datenschutz">Datenschutz</a></div>
+  <div><a id="impressum" data-text="impressum" href="https://www.kallfass.de/impressum">Impressum</a> · <a id="datenschutz" data-text="datenschutz" href="https://www.kallfass.de/datenschutz">Datenschutz</a></div>
 </footer>
 
 <script>
   const HOTLINE = "+49 7022 607109";
-  const KONTAKT = "https://www.kallfass.de/kontakt";
+
+  const TEXTE = {
+    de: {
+      titel: "Maschineninfo", maschine: "Maschine",
+      nr: "Maschinennummer", typ: "Maschinentyp",
+      fehlt: "In diesem Link sind keine Maschinendaten enthalten.",
+      anrufen: "Service anrufen", kontakt: "Kontaktformular", hotline: "Service-Hotline:",
+      impressum: "Impressum", datenschutz: "Datenschutz",
+      links: {
+        startseite: "https://www.kallfass.de/",
+        kontakt: "https://www.kallfass.de/kontakt",
+        impressum: "https://www.kallfass.de/impressum",
+        datenschutz: "https://www.kallfass.de/datenschutz"
+      }
+    },
+    en: {
+      titel: "Machine info", maschine: "Machine",
+      nr: "Machine number", typ: "Machine type",
+      fehlt: "This link does not contain any machine data.",
+      anrufen: "Call service", kontakt: "Contact form", hotline: "Service hotline:",
+      impressum: "Legal notice", datenschutz: "Privacy policy",
+      links: {
+        startseite: "https://www.kallfass.de/en/home",
+        kontakt: "https://www.kallfass.de/en/home/contact",
+        impressum: "https://www.kallfass.de/en/home/legal-notice",
+        datenschutz: "https://www.kallfass.de/en/home/privacy-policy"
+      }
+    }
+  };
+
+  const sprache = /^de\b/i.test((navigator.languages || [])[0] || navigator.language || "") ? "de" : "en";
+  const t = TEXTE[sprache];
+  document.documentElement.lang = sprache;
+  document.querySelectorAll("[data-text]").forEach(el => el.textContent = t[el.dataset.text]);
+  for (const id in t.links) document.getElementById(id).href = t.links[id];
+  document.title = t.titel + " | Kallfass";
 
   const link = new URLSearchParams(location.search);
   const nr = link.get("nr") || "", typ = link.get("typ") || "";
@@ -87,11 +123,10 @@
   document.getElementById("nr").textContent = nr || "–";
   document.getElementById("typ").textContent = typ || "–";
   document.getElementById("fehlt").hidden = !!(nr || typ);
-  if (nr) document.title = "Maschine " + nr + " | Kallfass";
+  if (nr) document.title = t.maschine + " " + nr + " | Kallfass";
 
   document.getElementById("anrufen").href = "tel:" + HOTLINE.replace(/[^\d+]/g, "");
   document.getElementById("hotline").textContent = HOTLINE;
-  document.getElementById("kontakt").href = KONTAKT;
 </script>
 </body>
 </html>
